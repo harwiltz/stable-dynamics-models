@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from icnn import ICNN
+from stablemodels.icnn import ICNN
 
 class TestICNN(unittest.TestCase):
     def test_icnn_pipeline_nonbatch(self):
