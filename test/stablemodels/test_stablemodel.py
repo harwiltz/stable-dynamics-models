@@ -27,6 +27,32 @@ class TestStableDynamicsModel(unittest.TestCase):
         next_x = net(x).squeeze()
         next_x.sum().backward()
 
+    def test_naive_control_stable_model_pipeline(self):
+        net = StableDynamicsModel(4, control_size=2)
+        x = torch.randn(4, requires_grad=True).unsqueeze(0)
+        u = torch.randn(2, requires_grad=True).unsqueeze(0)
+        next_x = net(x, u)
+        x_shape = x.squeeze().shape
+        next_x_shape = next_x.squeeze().shape
+        assert x_shape == next_x_shape, "{} =/= {}".format(x_shape, next_x_shape)
+
+    def test_naive_control_stable_model_batch_pipeline(self):
+        net = StableDynamicsModel(4, control_size=2)
+        x = torch.randn((2,4), requires_grad=True).unsqueeze(0)
+        u = torch.randn((2,2), requires_grad=True).unsqueeze(0)
+        next_x = net(x, u)
+        x_shape = x.squeeze().shape
+        next_x_shape = next_x.squeeze().shape
+        assert x_shape == next_x_shape, "{} =/= {}".format(x_shape, next_x_shape)
+
+    def test_naive_control_stable_model_backprop(self):
+        net = StableDynamicsModel(4, control_size=2)
+        x = torch.randn(4, requires_grad=True).unsqueeze(0)
+        u = torch.randn(2, requires_grad=True).unsqueeze(0)
+        next_x = net(x, u).squeeze()
+        next_x.sum().backward()
+
 if __name__ == "__main__":
-#    TestStableDynamicsModel().test_stable_model_pipeline()
+    torch.autograd.set_detect_anomaly(True)
+#    TestStableDynamicsModel().test_naive_control_stable_model_batch_pipeline()
     unittest.main()
