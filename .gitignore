@@ -1,3 +1,6 @@
 **/*.swp
 **/__pycache__
 **/testbed.py
+**/build
+**/dist
+**/*.egg-info
