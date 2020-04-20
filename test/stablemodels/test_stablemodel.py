@@ -7,7 +7,7 @@ from stablemodels.model import StableDynamicsModel
 class TestStableDynamicsModel(unittest.TestCase):
     def test_stable_model_pipeline(self):
         net = StableDynamicsModel((4,))
-        x = torch.randn(4, requires_grad=True).unsqueeze(0)
+        x = torch.randn(4).unsqueeze(0)
         next_x = net(x)
         x_shape = x.squeeze().shape
         next_x_shape = next_x.squeeze().shape
@@ -15,7 +15,7 @@ class TestStableDynamicsModel(unittest.TestCase):
 
     def test_stable_model_batch_pipeline(self):
         net = StableDynamicsModel((4,))
-        x = torch.randn((2,4), requires_grad=True).unsqueeze(0)
+        x = torch.randn((2,4)).unsqueeze(0)
         next_x = net(x)
         x_shape = x.squeeze().shape
         next_x_shape = next_x.squeeze().shape
@@ -23,14 +23,14 @@ class TestStableDynamicsModel(unittest.TestCase):
 
     def test_stable_model_backprop(self):
         net = StableDynamicsModel((4,))
-        x = torch.randn(4, requires_grad=True).unsqueeze(0)
+        x = torch.randn(4).unsqueeze(0)
         next_x = net(x).squeeze()
         next_x.sum().backward()
 
     def test_naive_control_stable_model_pipeline(self):
         net = StableDynamicsModel(4, control_size=2)
-        x = torch.randn(4, requires_grad=True).unsqueeze(0)
-        u = torch.randn(2, requires_grad=True).unsqueeze(0)
+        x = torch.randn(4).unsqueeze(0)
+        u = torch.randn(2).unsqueeze(0)
         next_x = net(x, u)
         x_shape = x.squeeze().shape
         next_x_shape = next_x.squeeze().shape
@@ -38,8 +38,8 @@ class TestStableDynamicsModel(unittest.TestCase):
 
     def test_naive_control_stable_model_batch_pipeline(self):
         net = StableDynamicsModel(4, control_size=2)
-        x = torch.randn((2,4), requires_grad=True).unsqueeze(0)
-        u = torch.randn((2,2), requires_grad=True).unsqueeze(0)
+        x = torch.randn((2,4)).unsqueeze(0)
+        u = torch.randn((2,2)).unsqueeze(0)
         next_x = net(x, u)
         x_shape = x.squeeze().shape
         next_x_shape = next_x.squeeze().shape
@@ -47,8 +47,8 @@ class TestStableDynamicsModel(unittest.TestCase):
 
     def test_naive_control_stable_model_backprop(self):
         net = StableDynamicsModel(4, control_size=2)
-        x = torch.randn(4, requires_grad=True).unsqueeze(0)
-        u = torch.randn(2, requires_grad=True).unsqueeze(0)
+        x = torch.randn(4).unsqueeze(0)
+        u = torch.randn(2).unsqueeze(0)
         next_x = net(x, u).squeeze()
         next_x.sum().backward()
 

@@ -35,6 +35,7 @@ class StableDynamicsModel(nn.Module):
         xu = x.squeeze()
         if self._act_size != 0:
             xu = torch.cat([x, u], dim=-1).squeeze()
+        xu.requires_grad = True
         f = self._l1(xu.squeeze()).relu()
         f = self._l2(f).relu()
         f = self._l3(f)
