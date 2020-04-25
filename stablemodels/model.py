@@ -45,7 +45,7 @@ class StableDynamicsModel(nn.Module):
         lyapunov = self._lyapunov_function(xu).squeeze()
         xu.retain_grad()
         lyapunov.backward(gradient=torch.ones_like(lyapunov), retain_graph=True)
-        grad_v = xu.grad
+        grad_v = xu.grad.clone()
         gv = grad_v.view(-1, 1, *xu.shape[1:])
         fv = grad_v.view(-1, *xu.shape[1:], 1)
         dot = (gv @ fv).squeeze()
