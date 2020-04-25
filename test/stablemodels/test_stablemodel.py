@@ -52,6 +52,17 @@ class TestStableDynamicsModel(unittest.TestCase):
         next_x = net(x, u).squeeze()
         next_x.sum().backward()
 
+    def test_multistep_prediction(self):
+        S = 4
+        A = 2
+        H = 5
+        B = 10
+        net = StableDynamicsModel(S, control_size=A)
+        x = torch.randn((B, H, S), requires_grad=True)
+        u = torch.randn((B, H, A), requires_grad=True)
+        prediction = net.predict(x, u)
+        assert prediction.shape == x.shape, "{} =/= {}".format(x.shape, prediction.shape)
+
 if __name__ == "__main__":
     torch.autograd.set_detect_anomaly(True)
 #    TestStableDynamicsModel().test_naive_control_stable_model_batch_pipeline()

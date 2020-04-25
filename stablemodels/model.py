@@ -35,7 +35,8 @@ class StableDynamicsModel(nn.Module):
         xu = x.squeeze()
         if self._act_size != 0:
             xu = torch.cat([x, u], dim=-1).squeeze()
-        xu.requires_grad = True
+        if not xu.requires_grad:
+            xu.requires_grad = True
         f = self._l1(xu.squeeze()).relu()
         f = self._l2(f).relu()
         f = self._l3(f)
@@ -52,3 +53,15 @@ class StableDynamicsModel(nn.Module):
         if len(orth.shape) == 0:
             orth.unsqueeze_(0)
         return f - (torch.diag_embed(orth) @ grad_v)[:, :self._obs_size]
+
+    def predict(self, x, u=None):
+        x = x.permute(1, 0, 2)
+        if u is not None:
+            u = u.permute(1, 0, 2)
+        prediction = torch.zeros_like(x)
+        xt = x[0]
+        for t in range(x.shape[0]):
+            ut = None if u is None else u[t]
+            prediction[t] = self.forward(xt, ut)
+            xt = prediction[t]
+        return prediction.permute(1, 0, 2)
